@@ -25,9 +25,8 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { Input } from "./input";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { CheckCheck, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "./button";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 interface DataTableProps<TData, TValue> {
@@ -49,9 +48,9 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   localStorage.setItem("clickable", clickable.toString());
   const navigate = useNavigate();
+  console.log(type);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [settleLoading, setSettleLoading] = React.useState(false);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );

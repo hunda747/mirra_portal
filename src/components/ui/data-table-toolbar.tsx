@@ -1,20 +1,8 @@
 import { Table } from "@tanstack/react-table";
 
-import {
-  statuses,
-  operations,
-  sex,
-  accountType,
-  years,
-  months,
-} from "./data/data";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { Button } from "./button";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { CrossIcon } from "lucide-react";
-import { useGetBranchesByDistrictQuery } from "@/features/branches/branchApiSlice";
-import { useParams } from "react-router-dom";
-import { getBranchesType } from "./data/getBranchesType";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

@@ -25,7 +25,7 @@ const createProtectedRoute = ({
           {sidebarComponent ||
             (<AppSidebar />)}
           <SidebarInset>
-            <Header />
+            {useClientSidebar ? <Header /> : <Header />}
             {element}
           </SidebarInset>
         </SidebarProvider>

@@ -96,4 +96,4 @@ export const {
   useUpdateUserMutation,
   useGetCurrentUserQuery,
 } = userApiSlice;
-export type { User };
+export type { User, Admin };

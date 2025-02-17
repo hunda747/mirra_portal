@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../button";
-import { Textarea } from "@/components/ui/textarea";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Modal } from "../modal";
 import {
@@ -22,11 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../select";
-import { useCreateProductMutation } from "@/features/product/productApiSlice";
 import { useProductPriceModal } from "@/hooks/use-product-price-modal";
 import { useGetProductsQuery } from "@/features/product/productApiSlice";
 import { useAddProductToShopMutation } from "@/features/shops/shopApiSlice";
-import { useParams } from "react-router-dom";
 const formSchema = z.object({
   productId: z.string().min(1, "Shop name is required"),
   price: z.number().min(1, "Price is required"),
@@ -37,9 +34,6 @@ export const ProductPriceModal = ({ shopId }: { shopId: string }) => {
   const productPriceModal = useProductPriceModal();
   const { data: products } = useGetProductsQuery();
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File>();
-  const [error, setError] = useState<string>("");
-  const [createProduct] = useCreateProductMutation();
   const [addProductToShop] = useAddProductToShopMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({

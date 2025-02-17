@@ -7,9 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
-import { TProduct, TProductWithPrice } from "@/features/shops/shopApiSlice";
+import { TProductWithPrice } from "@/features/shops/shopApiSlice";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

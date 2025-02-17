@@ -15,11 +15,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { User } from "@/features/user/userApiSlice";
+import { Admin } from "@/features/user/userApiSlice";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export function NavUser({ user }: { user: User | undefined }) {
+export function NavUser({ user }: { user: Admin | undefined }) {
   const { logout } = useAuth();
   const navigate = useNavigate();
   return (
@@ -36,7 +36,7 @@ export function NavUser({ user }: { user: User | undefined }) {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold text-secondary">
-                  {user?.fullName}
+                  {user?.username}
                 </span>
                 <span className="truncate text-xs text-secondary">
                   {user?.email}
@@ -58,7 +58,7 @@ export function NavUser({ user }: { user: User | undefined }) {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {user?.fullName}
+                    {user?.username}
                   </span>
                   <span className="truncate text-xs">{user?.email}</span>
                 </div>

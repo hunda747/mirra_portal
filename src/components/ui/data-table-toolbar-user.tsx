@@ -1,12 +1,9 @@
 import { Table } from "@tanstack/react-table";
-
 import { userStatus } from "./data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { Button } from "./button";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { useEffect, useState } from "react";
 import { CrossIcon } from "lucide-react";
-import { useGetAllBranchesQuery } from "@/features/branches/branchApiSlice";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -16,25 +13,6 @@ export function DataTableToolbarUser<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  const [formattedBranches, setFormattedBranches] = useState<
-    { value: string; label: string }[]
-  >([]);
-
-  const { data: res } = useGetAllBranchesQuery();
-
-  useEffect(() => {
-    const fetchBranch = async () => {
-      const data = res instanceof Array ? res : [];
-
-      // Map branches to desired format
-      const formatted = data.map((branch) => ({
-        value: branch.name || "",
-        label: branch.name || "",
-      }));
-      setFormattedBranches(formatted);
-    };
-    fetchBranch();
-  }, [res]);
 
   return (
     <div className="flex items-center justify-between">
@@ -44,13 +22,6 @@ export function DataTableToolbarUser<TData>({
             column={table.getColumn("status")}
             title="Status"
             options={userStatus}
-          />
-        )}
-        {table.getColumn("branch") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("branch")}
-            title="Branch"
-            options={formattedBranches}
           />
         )}
         {isFiltered && (

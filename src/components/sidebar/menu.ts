@@ -14,10 +14,8 @@ import {
   Store,
   Target,
   Telescope,
-  User,
   UserPlus,
   Users,
-  Users2,
 } from "lucide-react";
 
 const sidebarMenu = {
