@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "../button";
 import { Textarea } from "@/components/ui/textarea";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { Modal } from "../modal";
 import {
@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "../select";
 import { useShopModal } from "@/hooks/use-shop-modal";
-import { useCreateShopMutation } from "@/features/shops/shopSlice";
+import { useCreateShopMutation, useUpdateShopMutation } from "@/features/shops/shopApiSlice";
 const formSchema = z.object({
   image: z.string().optional(),
   shopName: z.string().min(1, "Shop name is required"),
@@ -41,6 +41,7 @@ export const ShopModal = () => {
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>("");
   const [createShop] = useCreateShopMutation();
+  const [updateShop] = useUpdateShopMutation();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -79,10 +80,28 @@ export const ShopModal = () => {
       shopName: "",
       address: "",
       category: undefined,
+      latitude: 0,
+      longitude: 0,
       openingTime: "",
       closingTime: "",
     },
   });
+
+  // Reset form when modal opens/closes
+  useEffect(() => {
+    if (shopModal.isOpen) {
+      form.reset({
+        image: shopModal.shop?.image || "",
+        shopName: shopModal.shop?.name || "",
+        address: shopModal.shop?.address || "",
+        category: shopModal.shop?.category || "",
+        latitude: shopModal.shop?.location.coordinates[1] || 0,
+        longitude: shopModal.shop?.location.coordinates[0] || 0,
+        // openingTime: shopModal.shop?.openingTime?.open || "",
+        // closingTime: shopModal.shop?.closingTime?.close || "",
+      });
+    }
+  }, [shopModal.isOpen, shopModal.shop, form]);
 
   const categories = [
     { id: 1, name: "Category 1" },
@@ -91,15 +110,14 @@ export const ShopModal = () => {
   ];
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Form values:", values);
-
-    if (!file) {
+    // Don't require image upload when editing if no new image is selected
+    if (!file && !shopModal.shop?.image) {
       toast.error("Please select an image");
       return;
     }
 
     const formData = new FormData();
-    formData.append("image", file);
+    if (file) formData.append("image", file);
     formData.append("name", values.shopName);
     formData.append("address", values.address);
     formData.append("category", values.category?.toString() || "");
@@ -110,9 +128,21 @@ export const ShopModal = () => {
 
     try {
       setLoading(true);
-      const response = await createShop(formData).unwrap();
-      if (response) {
-        toast.success("Shop Created");
+      if (shopModal.shop) {
+        // Update shop
+        const response = await updateShop({
+          id: shopModal.shop._id,
+          shop: formData
+        }).unwrap();
+        if (response) {
+          toast.success("Shop Updated");
+        }
+      } else {
+        // Create shop
+        const response = await createShop(formData).unwrap();
+        if (response) {
+          toast.success("Shop Created");
+        }
       }
       shopModal.onClose();
     } catch (error: any) {
@@ -126,8 +156,8 @@ export const ShopModal = () => {
 
   return (
     <Modal
-      title="Add Shop"
-      description="Add a new shop"
+      title={shopModal.shop ? "Edit Shop" : "Add Shop"}
+      description={shopModal.shop ? "Edit your shop details" : "Add a new shop"}
       isOpen={shopModal.isOpen}
       onClose={shopModal.onClose}
     >
@@ -149,19 +179,29 @@ export const ShopModal = () => {
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     {error && <p style={{ color: "red" }}>{error}</p>}
                     {file ? (
-                      <>
-                        <img
-                          width={300}
-                          height={150}
-                          style={{
-                            width: "100%",
-                            height: "200",
-                          }}
-                          src={URL.createObjectURL(file)}
-                          className="h-24"
-                          alt={file.name}
-                        />
-                      </>
+                      <img
+                        width={300}
+                        height={150}
+                        style={{
+                          width: "100%",
+                          height: "200",
+                        }}
+                        src={URL.createObjectURL(file)}
+                        className="h-24"
+                        alt={file.name}
+                      />
+                    ) : shopModal.shop?.image ? (
+                      <img
+                        width={300}
+                        height={150}
+                        style={{
+                          width: "100%",
+                          height: "200",
+                        }}
+                        src={`${import.meta.env.VITE_API_URL}${shopModal.shop.image}`}
+                        className="h-24"
+                        alt="Current shop image"
+                      />
                     ) : (
                       <>
                         <svg
@@ -180,7 +220,7 @@ export const ShopModal = () => {
                           ></path>
                         </svg>
                         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="font-semibold">Click to logo</span>
+                          <span className="font-semibold">Click to upload</span>
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                           SVG, PNG, JPG or GIF (MAX. 1200px)
@@ -331,7 +371,7 @@ export const ShopModal = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-cyan-500"
+                  className="bg-green-700 hover:bg-green-800"
                 >
                   Continue
                 </Button>

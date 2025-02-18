@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "../button";
 import { Textarea } from "@/components/ui/textarea";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { Modal } from "../modal";
 import {
@@ -23,7 +23,8 @@ import {
   SelectValue,
 } from "../select";
 import { useProductModal } from "@/hooks/use-product-modal";
-import { useCreateProductMutation } from "@/features/product/productApiSlice";
+import { useCreateProductMutation, useUpdateProductMutation, Product } from "@/features/product/productApiSlice";
+
 const formSchema = z.object({
   image: z.string().optional(),
   productName: z.string().min(1, "Shop name is required"),
@@ -31,12 +32,17 @@ const formSchema = z.object({
   description: z.string().min(1, "Description is required"),
 });
 
-export const ProductModal = () => {
+interface ProductModalProps {
+  product?: Product;
+}
+
+export const ProductModal: React.FC<ProductModalProps> = ({ product }) => {
   const productModal = useProductModal();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<string>("");
   const [createProduct] = useCreateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -71,12 +77,23 @@ export const ProductModal = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      image: "",
-      productName: "",
-      category: "",
-      description: "",
+      image: productModal.product?.image || "",
+      productName: productModal.product?.name || "",
+      category: productModal.product?.category || "",
+      description: productModal.product?.description || "",
     },
   });
+
+  useEffect(() => {
+    if (productModal.isOpen) {
+      form.reset({
+        image: productModal.product?.image || "",
+        productName: productModal.product?.name || "",
+        category: productModal.product?.category || "",
+        description: productModal.product?.description || "",
+      });
+    }
+  }, [productModal.isOpen, productModal.product, form]);
 
   const categories = [
     { id: 1, name: "Category 1" },
@@ -85,24 +102,32 @@ export const ProductModal = () => {
   ];
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Form values:", values);
-
-    if (!file) {
+    if (!file && !productModal.product?.image) {
       toast.error("Please select an image");
       return;
     }
 
     const formData = new FormData();
-    formData.append("image", file);
+    if (file) formData.append("image", file);
     formData.append("name", values.productName);
     formData.append("category", values.category?.toString() || "");
     formData.append("description", values.description);
 
     try {
       setLoading(true);
-      const response = await createProduct(formData).unwrap();
-      if (response) {
-        toast.success("Product Created");
+      if (productModal.product) {
+        const response = await updateProduct({
+          id: productModal.product._id,
+          product: formData
+        }).unwrap();
+        if (response) {
+          toast.success("Product Updated");
+        }
+      } else {
+        const response = await createProduct(formData).unwrap();
+        if (response) {
+          toast.success("Product Created");
+        }
       }
       productModal.onClose();
     } catch (error: any) {
@@ -110,14 +135,12 @@ export const ProductModal = () => {
     } finally {
       setLoading(false);
     }
-
-    console.log("Form errors:", form.formState.errors);
   };
 
   return (
     <Modal
-      title="Add Product"
-      description="Add a new product"
+      title={productModal.product ? "Edit Product" : "Add Product"}
+      description={productModal.product ? "Edit your product details" : "Add a new product"}
       isOpen={productModal.isOpen}
       onClose={productModal.onClose}
     >
@@ -139,19 +162,29 @@ export const ProductModal = () => {
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     {error && <p style={{ color: "red" }}>{error}</p>}
                     {file ? (
-                      <>
-                        <img
-                          width={300}
-                          height={150}
-                          style={{
-                            width: "100%",
-                            height: "200",
-                          }}
-                          src={URL.createObjectURL(file)}
-                          className="h-24"
-                          alt={file.name}
-                        />
-                      </>
+                      <img
+                        width={300}
+                        height={150}
+                        style={{
+                          width: "100%",
+                          height: "200",
+                        }}
+                        src={URL.createObjectURL(file)}
+                        className="h-24"
+                        alt={file.name}
+                      />
+                    ) : productModal.product?.image ? (
+                      <img
+                        width={300}
+                        height={150}
+                        style={{
+                          width: "100%",
+                          height: "200",
+                        }}
+                        src={`${import.meta.env.VITE_API_URL}${productModal.product.image}`}
+                        className="h-24"
+                        alt="Current product image"
+                      />
                     ) : (
                       <>
                         <svg
@@ -170,7 +203,7 @@ export const ProductModal = () => {
                           ></path>
                         </svg>
                         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="font-semibold">Click to logo</span>
+                          <span className="font-semibold">Click to upload</span>
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                           SVG, PNG, JPG or GIF (MAX. 1200px)
@@ -261,7 +294,7 @@ export const ProductModal = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-cyan-500"
+                  className="bg-green-700 hover:bg-green-800"
                 >
                   Continue
                 </Button>

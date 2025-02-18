@@ -12,8 +12,24 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
+// Create a custom base query with error handling
+const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
+  const result = await baseQuery(args, api, extraOptions);
+  // Check if we receive a 401 error
+  if (result.error && result.error.status === 401) {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("clientId");
+    // Dispatch logout action
+    api.dispatch({type: "auth/logout"});
+  }
+  
+  return result;
+};
+
 export const apiSlice = createApi({
-  baseQuery,
+  baseQuery: baseQueryWithReauth,
   tagTypes: [
     "Examples",
     "Clients",
@@ -31,6 +47,8 @@ export const apiSlice = createApi({
     "Lead",
     "Task",
     "RTGS",
+    "Shops",
+    "Products",
   ],
   endpoints: () => ({}),
 });

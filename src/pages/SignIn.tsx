@@ -19,7 +19,8 @@ import { useLoginMutation } from "@/features/auth/authApiSlice";
 import { useAppDispatch } from "@/hooks";
 import { setToken } from "@/features/auth/authSlice";
 import { useAuth } from "@/contexts/AuthContext";
-import cmsLogo from "@/assets/images/ONBOARDING.png";
+// import cmsLogo from "@/assets/images/ONBOARDING.png";
+import cmsLogo from "@/assets/images/direlogo.png";
 import { Loader } from "lucide-react";
 
 const formSchema = z.object({
@@ -164,7 +165,7 @@ function LoginCard() {
                         <Button
                           disabled={loading}
                           type="submit"
-                          className="w-full bg-cyan-500 text-white"
+                          className="w-full bg-green-700 text-white hover:bg-green-800"
                         >
                           SIGN IN
                         </Button>

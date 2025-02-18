@@ -9,7 +9,9 @@ import {
 import { NavMain } from "./nav-main";
 import sidebarMenu from "./menu";
 import { useGetCurrentUserQuery } from "@/features/user/userApiSlice";
-import logo from "@/assets/images/coop-logo.png";
+// import logo from "@/assets/images/coop-logo.png";
+import logo from "@/assets/images/direlogo.png";
+
 import { ShopModal } from "../ui/modals/shop-modal";
 import { ProductModal } from "../ui/modals/product-modal";
 const roleItems = (
@@ -34,7 +36,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <TeamSwitcher clients={clients} />
         ) : ( */}
           <div className="flex items-center w-full justify-center">
-            <img src={logo} width={80} height={40} alt="logo" />
+            <img src={logo} width={80} height={10} alt="logo" />
           </div>
           {/* // )} */}
         </SidebarHeader>

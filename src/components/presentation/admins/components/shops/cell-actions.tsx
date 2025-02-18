@@ -6,12 +6,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Backpack, Copy, MoreHorizontal, StopCircle } from "lucide-react";
+import { Backpack, Copy, MoreHorizontal, Pencil, StopCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { SuspendAlertModal } from "@/components/ui/modals/suspend-alert-modal";
 import { Button } from "@/components/ui/button";
 import { Shop } from "@/features/shops/shopSlice";
+import { useShopModal } from "@/hooks/use-shop-modal";
 
 interface CellActionProps {
   data: Shop;
@@ -19,6 +20,7 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const navigate = useNavigate();
+  const shopModal = useShopModal();
   // const [toggleClientStatus] = useToggleClientStatusMutation();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -32,6 +34,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast.success("Shop ID copied to the clipboard");
+  };
+
+  const onEdit = () => {
+    shopModal.onOpen(data);
   };
 
   const onToggleStatus = async () => {
@@ -69,6 +75,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem onClick={() => onCopy(data._id.toString())}>
             <Copy className="mr-2 h-4 w-4" />
             Copy ID
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onEdit}>
+            <Pencil className="mr-2 h-4 w-4" />
+            Edit
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate(`/shops/${data._id}`)}>
             <Backpack className="mr-2 h-4 w-4" />

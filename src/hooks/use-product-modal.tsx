@@ -1,13 +1,16 @@
+import { Product } from "@/features/product/productApiSlice";
 import { create } from "zustand";
 
-interface useProductModalStore {
+interface ProductModalStore {
   isOpen: boolean;
-  onOpen: () => void;
+  product?: Product;
+  onOpen: (product?: Product) => void;
   onClose: () => void;
 }
 
-export const useProductModal = create<useProductModalStore>((set) => ({
+export const useProductModal = create<ProductModalStore>((set) => ({
   isOpen: false,
-  onOpen: () => set({ isOpen: true }),
-  onClose: () => set({ isOpen: false }),
+  product: undefined,
+  onOpen: (product) => set({ isOpen: true, product }),
+  onClose: () => set({ isOpen: false, product: undefined }),
 }));

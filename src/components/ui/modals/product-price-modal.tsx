@@ -155,7 +155,7 @@ export const ProductPriceModal = ({ shopId }: { shopId: string }) => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-cyan-500"
+                  className="bg-green-700 hover:bg-green-800"
                 >
                   Continue
                 </Button>
