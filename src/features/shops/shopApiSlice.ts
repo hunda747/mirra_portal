@@ -59,7 +59,7 @@ export const shopApiSlice = apiSlice.injectEndpoints({
     }),
     getShop: builder.query<Shop, string>({
       query: (id) => `/api/shops/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Shops', id }]
+      providesTags: (result, error, id) => [{ type: 'Shops', id, result, error }]
     }),
     createShop: builder.mutation<CreateShop, FormData>({
       query: (shop) => ({

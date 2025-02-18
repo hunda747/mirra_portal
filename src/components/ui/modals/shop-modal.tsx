@@ -31,8 +31,8 @@ const formSchema = z.object({
   latitude: z.number().min(1, "Latitude is required"),
   longitude: z.number().min(1, "Longitude is required"),
   category: z.string().min(1, "Category is required"),
-  openingTime: z.string().min(1, "Opening time is required"),
-  closingTime: z.string().min(1, "Closing time is required"),
+  openingTime: z.string().min(1, "Opening time is required").optional(),
+  closingTime: z.string().min(1, "Closing time is required").optional(),
 });
 
 export const ShopModal = () => {
@@ -121,8 +121,8 @@ export const ShopModal = () => {
     formData.append("name", values.shopName);
     formData.append("address", values.address);
     formData.append("category", values.category?.toString() || "");
-    formData.append("openingTime", values.openingTime);
-    formData.append("closingTime", values.closingTime);
+    formData.append("openingTime", values.openingTime || "");
+    formData.append("closingTime", values.closingTime || "");
     formData.append("latitude", values.latitude.toString());
     formData.append("longitude", values.longitude.toString());
 

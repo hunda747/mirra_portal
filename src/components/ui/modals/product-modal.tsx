@@ -43,6 +43,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product }) => {
   const [error, setError] = useState<string>("");
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
+  console.log(product);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
