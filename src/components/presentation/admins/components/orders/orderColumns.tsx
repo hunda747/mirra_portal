@@ -38,7 +38,7 @@ export const orderColumns: ColumnDef<Order>[] = [
       return <span>{row.original.shop.name}</span>;
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.original.shop.name);
+      return value.includes(row.original.shop.name || id);
     },
   },
   // {

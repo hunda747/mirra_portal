@@ -6,7 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Backpack, Copy, MoreHorizontal, Pencil, StopCircle } from "lucide-react";
+import { Backpack, Copy, MoreHorizontal, StopCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   Order

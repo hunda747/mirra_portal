@@ -1,23 +1,12 @@
 import {
-  BookUser,
-  Calendar,
   LayoutDashboard,
-  LucideWorkflow,
-  Mail,
-  MessageSquareText,
   Package,
   PackageOpen,
   // Notebook,
   Settings,
-  ShieldAlert,
-  SquareUserRound,
   Store,
-  Target,
-  Telescope,
   Truck,
   User,
-  UserPlus,
-  Users,
 } from "lucide-react";
 import { Admin } from "@/features/user/userApiSlice";
 
