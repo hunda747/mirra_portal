@@ -13,6 +13,8 @@ import LoginCard from "@/pages/SignIn";
 import DashboardPage from "@/pages/Dashboard";
 import Products from "@/pages/admin/Products";
 import ShopDetail from "@/pages/admin/ShopDetail";
+import Orders from "@/pages/admin/Orders";
+import OrderDetail from "@/pages/admin/OrderDetail";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -32,6 +34,14 @@ const router = createBrowserRouter(
       {createProtectedRoute({
         path: "/products",
         element: <Products />,
+      })}
+      {createProtectedRoute({
+        path: "/orders",
+        element: <Orders />,
+      })}
+      {createProtectedRoute({
+        path: "/orders/:id",
+        element: <OrderDetail />,
       })}
     </Route>
   )

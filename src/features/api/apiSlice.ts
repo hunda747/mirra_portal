@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://miraserver.rockgamestech.com",
-  // baseUrl: "http://localhost:7000",
+  // baseUrl: "https://miraserver.rockgamestech.com",
+  baseUrl: "http://localhost:7000",
   // baseUrl: "http://localhost:9060",
   // baseUrl: "http://10.2.125.41:9060",
   prepareHeaders: (headers) => {
@@ -23,6 +23,9 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
     localStorage.removeItem("clientId");
     // Dispatch logout action
     api.dispatch({type: "auth/logout"});
+    
+    // Redirect to login page
+    window.location.href = '/sign-in'; // Adjust this path if your login route is different
   }
   
   return result;
@@ -49,6 +52,7 @@ export const apiSlice = createApi({
     "RTGS",
     "Shops",
     "Products",
+    "Orders",
   ],
   endpoints: () => ({}),
 });

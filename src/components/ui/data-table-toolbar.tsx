@@ -3,6 +3,9 @@ import { Table } from "@tanstack/react-table";
 import { Button } from "./button";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { CrossIcon } from "lucide-react";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { statuses } from "./data/data";
+import { useGetShopsQuery } from "@/features/shops/shopApiSlice";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -12,30 +15,23 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-
+  const { data: shops } = useGetShopsQuery();
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        {/* {table.getColumn("status") && (
+        {table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
             title="Status"
             options={statuses}
           />
-        )} */}
+        )}
         {/* {table.getColumn("sex") && (
           <DataTableFacetedFilter
             column={table.getColumn("sex")}
             title="Gender"
             options={sex}
-          />
-        )} */}
-        {/* {table.getColumn("accountType") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("accountType")}
-            title="Account Type"
-            options={accountType}
           />
         )} */}
         {/* {table.getColumn("year") && (
@@ -52,13 +48,16 @@ export function DataTableToolbar<TData>({
             options={months}
           />
         )} */}
-        {/* {branchesType && table.getColumn("branch") && (
+        {shops && table.getColumn("shop") && (
           <DataTableFacetedFilter
-            column={table.getColumn("branch")}
-            title="Branch"
-            options={branchesType}
+            column={table.getColumn("shop")}
+            title="Shop"
+            options={shops.map((shop) => ({
+              label: shop.name,
+              value: shop.name,
+            }))}
           />
-        )} */}
+        )}
         {/* {table.getColumn("operation") && (
           <DataTableFacetedFilter
             column={table.getColumn("operation")}

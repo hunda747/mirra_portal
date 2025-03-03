@@ -33,8 +33,19 @@ interface Admin {
   _id: string;
   username: string;
   email: string;
-  role: string;
+  role: {
+    _id: string;
+    name: string;
+  };
+  shop: {
+    _id: string;
+    name: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
+
 
 type UserRequest = {
   fullName: string;
@@ -84,7 +95,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
     // GET - Get current user (self) details
     getCurrentUser: builder.query<Admin, void>({
-      query: () => "/api/admins/current",
+      query: () => "/api/admins/profile",
       providesTags: [{ type: "Users", id: "CURRENT_USER" }],
     }),
   }),
