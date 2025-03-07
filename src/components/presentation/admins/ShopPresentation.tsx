@@ -35,7 +35,7 @@ const ShopPresentation: FC<ShopPresentationProps> = ({ shops }) => {
         type="shop"
         searchKey="name"
         clickable={true}
-        columns={shopColumns}
+        columns={shopColumns as any}
         data={shops || []}
         onUrl={false}
       />

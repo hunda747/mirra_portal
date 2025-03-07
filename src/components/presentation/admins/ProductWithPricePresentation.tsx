@@ -24,6 +24,7 @@ const ProductWithPricePresentation: FC<ProductWithPricePresentationProps> = ({
   shopId,
 }) => {
   const productPriceModal = useProductPriceModal();
+  console.log(shopId);
 
   const handleEditProduct = (product: TProductWithPrice) => {
     productPriceModal.onOpen({

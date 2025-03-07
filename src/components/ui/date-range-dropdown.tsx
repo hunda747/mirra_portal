@@ -1,7 +1,6 @@
 "use client"
 
-import * as React from "react"
-import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns"
+import { format, subDays, startOfWeek, endOfWeek, startOfMonth } from "date-fns"
 import { Calendar as CalendarIcon, ChevronDown } from "lucide-react"
 import { DateRange } from "react-day-picker"
 

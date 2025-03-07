@@ -29,15 +29,15 @@ interface Admin {
 }
 
 
-type UserRequest = {
-  fullName: string;
-  email: string;
-  password: string;
-  roleId: number;
-  clientId: number;
-  branchIds: number[] | [];
-  mainBranchId: number;
-};
+// type UserRequest = {
+//   fullName: string;
+//   email: string;
+//   password: string;
+//   roleId: number;
+//   clientId: number;
+//   branchIds: number[] | [];
+//   mainBranchId: number;
+// };
 
 type AdminRequest = {
   _id?: string;

@@ -6,13 +6,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Backpack, Copy, MoreHorizontal, Pencil, StopCircle } from "lucide-react";
+import { Copy, MoreHorizontal, StopCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { SuspendAlertModal } from "@/components/ui/modals/suspend-alert-modal";
 import { Button } from "@/components/ui/button";
-import { Shop } from "@/features/shops/shopSlice";
-import { useShopModal } from "@/hooks/use-shop-modal";
 import { User, useUpdateUserMutation } from "@/features/user/userApiSlice";
 
 interface CellActionProps {
@@ -20,8 +17,8 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const navigate = useNavigate();
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  // const navigate = useNavigate();
+  const [updateUser] = useUpdateUserMutation();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 

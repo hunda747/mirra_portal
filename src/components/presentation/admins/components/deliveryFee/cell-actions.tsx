@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +20,6 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const deliveryFeeModal = useDeliveryFeeModal();
   const [deleteDeliveryFee] = useDeleteDeliveryFeeMutation();
 

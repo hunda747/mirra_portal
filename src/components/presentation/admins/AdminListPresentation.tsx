@@ -43,7 +43,7 @@ const AdminListPresentation: FC<AdminListPresentationProps> = ({
           </TableHeader>
           <TableBody>
             {Array.isArray(admins) && admins.map((item) => (
-              <TableRow key={item._id}>
+              <TableRow key={item._id as string}>
                 <TableCell className="font-medium">
                   {item.username}
                 </TableCell>

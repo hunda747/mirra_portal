@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: "https://miraserver.rockgamestech.com",
-  baseUrl: "http://localhost:7000",
+  baseUrl: import.meta.env.VITE_API_URL,
   // baseUrl: "http://localhost:9060",
   // baseUrl: "http://10.2.125.41:9060",
   prepareHeaders: (headers) => {

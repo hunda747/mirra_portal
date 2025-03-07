@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { Plus } from "lucide-react";
 import { userColumns } from "./components/users/user-column";
 import { User } from "@/features/user/userApiSlice";
 

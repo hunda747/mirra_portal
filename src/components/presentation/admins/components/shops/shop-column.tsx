@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { CellAction } from "./cell-actions";
 import { format } from "date-fns";
-import { Shop } from "@/features/shops/shopSlice";
+import { Shop } from "@/features/shops/shopApiSlice";
 import { Badge } from "@/components/ui/badge";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -27,7 +27,7 @@ export const shopColumns: ColumnDef<Shop>[] = [
         <div className="w-10 h-8 rounded-md overflow-hidden">
           <img
             src={
-              `${import.meta.env.VITE_API_URL || "http://localhost:7000"}${row.original.image}` ||
+              `${import.meta.env.VITE_API_URL}${row.original.image}` ||
               "https://coopbankoromia.com.et/wp-content/uploads/2023/02/Infinity-Logo.png"
             }
             alt="logo"

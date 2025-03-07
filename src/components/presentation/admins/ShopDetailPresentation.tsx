@@ -27,7 +27,7 @@ const ShopDetailPresentation: FC<ShopDetailPresentationProps> = ({ shop }) => {
       <CardHeader className="flex flex-row items-center justify-between space-x-6 p-6 border-b">
         <div className="flex space-x-6 items-center">
           <img
-            src={`${import.meta.env.VITE_API_URL || "http://localhost:7000"}${shop?.image}`}
+            src={`${import.meta.env.VITE_API_URL}${shop?.image}`}
             alt="Signature"
             className="w-16 h-16 rounded-lg shadow-md"
           />
@@ -79,7 +79,7 @@ const ShopDetailPresentation: FC<ShopDetailPresentationProps> = ({ shop }) => {
           </CardTitle>
           <div className="flex space-x-4">
             <img
-              src={`${import.meta.env.VITE_API_URL || "http://localhost:7000"}${shop?.image}`}
+              src={`${import.meta.env.VITE_API_URL}${shop?.image}`}
               alt="Residence Card"
               className="w-80 h-40 rounded-lg shadow-md"
             />

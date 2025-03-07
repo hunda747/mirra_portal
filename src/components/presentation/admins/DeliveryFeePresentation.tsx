@@ -1,5 +1,5 @@
 
-import { Heading, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export default function DeliveryFeePresentation({
   isLoading,
 }: DeliveryFeePresentationProps) {
   const deliveryFeeModal = useDeliveryFeeModal();
+  console.log(isLoading);
 
   return (
     <>

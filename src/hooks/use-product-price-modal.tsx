@@ -19,6 +19,6 @@ interface ProductPriceModalStore {
 export const useProductPriceModal = create<ProductPriceModalStore>((set) => ({
   isOpen: false,
   data: null,
-  onOpen: (data = null) => set({ isOpen: true, data }),
+  onOpen: (data = undefined) => set({ isOpen: true, data }),
   onClose: () => set({ isOpen: false, data: null }),
 }));

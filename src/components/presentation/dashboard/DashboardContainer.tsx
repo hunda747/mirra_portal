@@ -18,7 +18,6 @@ import {
   DollarSign,
   Package,
   Store,
-  TrendingUp,
   CheckCircle,
   Clock,
   XCircle,
