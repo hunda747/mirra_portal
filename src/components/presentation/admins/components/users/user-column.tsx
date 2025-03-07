@@ -3,40 +3,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { CellAction } from "./cell-actions";
 import { format } from "date-fns";
-import { Shop } from "@/features/shops/shopSlice";
+import { User } from "@/features/user/userApiSlice";
 import { Badge } from "@/components/ui/badge";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const shopColumns: ColumnDef<Shop>[] = [
-  {
-    accessorKey: "logo",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Logo
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <div className="w-10 h-8 rounded-md overflow-hidden">
-          <img
-            src={
-              `${import.meta.env.VITE_API_URL || "http://localhost:7000"}${row.original.image}` ||
-              "https://coopbankoromia.com.et/wp-content/uploads/2023/02/Infinity-Logo.png"
-            }
-            alt="logo"
-            className="object-cover w-full h-full"
-          />
-        </div>
-      );
-    },
-  },
+export const userColumns: ColumnDef<User>[] = [
   // {
   //   accessorKey: "_id",
   //   header: ({ column }) => {
@@ -53,49 +25,49 @@ export const shopColumns: ColumnDef<Shop>[] = [
   //   enableHiding: true,
   // },
   {
-    accessorKey: "name",
+    accessorKey: "fullName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Shop Name
+          Full Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "address",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Address
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "phone",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
+          Phone
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "isOpen",
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
@@ -108,7 +80,7 @@ export const shopColumns: ColumnDef<Shop>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.isOpen ? <Badge>Open</Badge> : <Badge variant="destructive">Closed</Badge>}</span>;
+      return <span>{row.original.status === "active" ? <Badge>Active</Badge> : <Badge variant="destructive">Inactive</Badge>}</span>;
     },
   },
   {

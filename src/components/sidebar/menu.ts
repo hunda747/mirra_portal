@@ -50,6 +50,12 @@ const getSidebarMenu = (currentUser?: Admin) => {
         authorizedRoles: ["SUPER-ADMIN"],
       },
       {
+        title: "Users",
+        url: "/users",
+        icon: User,
+        authorizedRoles: ["SUPER-ADMIN"],
+      },
+      {
         title: "Settings",
         url: "/settings",
         icon: Settings,
@@ -60,11 +66,11 @@ const getSidebarMenu = (currentUser?: Admin) => {
             url: "/settings/delivery-fee",
             icon: Truck,
           },
-          {
-            title: "Profile",
-            url: "/settings/profile",
-            icon: User,
-          },
+          // {
+          //   title: "Profile",
+          //   url: "/settings/profile",
+          //   icon: User,
+          // },
         ],
       },
     ],
@@ -88,19 +94,19 @@ const getSidebarMenu = (currentUser?: Admin) => {
         icon: PackageOpen,
         authorizedRoles: ["SHOP_OWNER"],
       },
-      {
-        title: "Settings",
-        url: "/settings",
-        icon: Settings,
-        authorizedRoles: ["SHOP_OWNER"],
-        items: [
-          {
-            title: "Profile",
-            url: "/settings/profile",
-            icon: User,
-          },
-        ],
-      },
+      // {
+      //   title: "Settings",
+      //   url: "/settings",
+      //   icon: Settings,
+      //   authorizedRoles: ["SHOP_OWNER"],
+      //   items: [
+      //     {
+      //       title: "Profile",
+      //       url: "/settings/profile",
+      //       icon: User,
+      //     },
+      //   ],
+      // },
     ],
   };
 };

@@ -1,3 +1,4 @@
+import { Admin } from "../admin/adminApiSlice";
 import { apiSlice } from "../api/apiSlice";
 
 interface TLocation {
@@ -20,22 +21,24 @@ interface TProductWithPrice {
   product: TProduct;
   price: number;
   inStock: boolean;
+  quantity: number;
   _id: string;
 };
 
 interface Shop {
   _id: string;
-    name: string;
-    address: string;
-    category: string;
-    isOpen: boolean;
-    image?: string;
-    location: TLocation;
-    products: TProductWithPrice[] | String;
-    distance?: number;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
+  name: string;
+  address: string;
+  category: string;
+  isOpen: boolean;
+  image?: string;
+  admins?: Admin[];
+  location: TLocation;
+  products: TProductWithPrice[] | String;
+  distance?: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 interface CreateShop {
@@ -54,7 +57,7 @@ interface CreateShop {
 export const shopApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getShops: builder.query<Shop[], void>({
-      query: () => "/api/shops",
+      query: () => "/api/shops/admin",
       providesTags: ['Shops']
     }),
     getShop: builder.query<Shop, string>({
@@ -77,16 +80,32 @@ export const shopApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Shops']
     }),
-    addProductToShop: builder.mutation<TProductWithPrice, { shopId: string, productId: string, price: number, inStock: boolean }>({
-      query: ({ shopId, productId, price, inStock }) => ({
+    addProductToShop: builder.mutation<TProductWithPrice, { shopId: string, productId: string, price: number, inStock: boolean, quantity: number }>({
+      query: ({ shopId, productId, price, inStock, quantity }) => ({
         url: `/api/shops/${shopId}/products`,
         method: "POST",
-        body: { productId, price, inStock },
+        body: { productId, price, inStock, quantity },
+      }),
+      invalidatesTags: ['Shops']
+    }),
+    updateProductPrice: builder.mutation<TProductWithPrice, { shopId: string, productId: string, price: number, inStock: boolean, quantity: number }>({
+      query: ({ shopId, productId, price, inStock, quantity }) => ({
+        url: `/api/shops/${shopId}/products/${productId}`,
+        method: "PUT",
+        body: { price, inStock, quantity },
+      }),
+      invalidatesTags: ['Shops']
+    }),
+    updateShopStatus: builder.mutation<Shop, { id: string, isOpen: boolean }>({
+      query: ({ id, isOpen }) => ({
+        url: `/api/shops/${id}/status`,
+        method: "PUT",
+        body: { isOpen },
       }),
       invalidatesTags: ['Shops']
     }),
   }),
 });
 
-export const { useGetShopsQuery, useGetShopQuery, useCreateShopMutation, useAddProductToShopMutation, useUpdateShopMutation } = shopApiSlice;
+export const { useGetShopsQuery, useGetShopQuery, useCreateShopMutation, useAddProductToShopMutation, useUpdateShopMutation, useUpdateProductPriceMutation, useUpdateShopStatusMutation } = shopApiSlice;
 export type { Shop, CreateShop, TProduct, TProductWithPrice };

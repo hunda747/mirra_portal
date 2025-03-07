@@ -37,7 +37,7 @@ const userSlice = createSlice({
     },
     updateUser: (state, action: PayloadAction<User>) => {
       const index = state.users.findIndex(
-        (user) => user.userId === action.payload.userId
+        (user) => user._id === action.payload._id
       );
       if (index !== -1) {
         state.users[index] = action.payload;
@@ -45,7 +45,7 @@ const userSlice = createSlice({
     },
     deleteUser: (state, action: PayloadAction<number>) => {
       state.users = state.users.filter(
-        (user) => user.userId !== action.payload
+        (user) => user._id !== action.payload
       );
     },
   },
@@ -64,7 +64,7 @@ export const {
 // Selectors
 export const selectUsers = (state: RootState) => state.user.users;
 export const selectUserById = (state: RootState, id: number) =>
-  state.user.users.find((user) => user.userId === id);
+  state.user.users.find((user) => user._id === id);
 export const selectCurrentUser = (state: RootState) => state.user.currentUser;
 export const selectUserLoading = (state: RootState) => state.user.isLoading;
 export const selectUserError = (state: RootState) => state.user.error;

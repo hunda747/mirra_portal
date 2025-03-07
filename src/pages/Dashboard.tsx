@@ -1,10 +1,9 @@
-
+import DashboardPresentation from "@/components/presentation/dashboard/DashboardPresentation";
 
 const DashboardPage = () => {
-
   return (
-    <div className="p-5">
-      dashboard
+    <div className="container mx-auto">
+      <DashboardPresentation />
     </div>
   );
 };

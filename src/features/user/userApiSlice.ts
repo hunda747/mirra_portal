@@ -1,32 +1,14 @@
 import { apiSlice } from "../api/apiSlice";
 
 interface User {
-  userId: number;
+  _id: number;
   fullName: string;
-  username: string;
   email: string;
-  phone: string;
-  role: string;
+  phone?: string;
   status: string;
-  lastLoggedIn: string;
-  registeredAt: string;
-  registeredBy: string;
+  createdAt: string;
   updatedAt: string;
-  client: {
-    id: number;
-    name: string;
-    description: string;
-  };
-  branches: Array<{
-    id: number;
-    name: string;
-    branchCode: string;
-  }>;
-  mainBranch: {
-    id: number;
-    name: string;
-    branchCode: string;
-  };
+  __v: number;
 }
 
 interface Admin {
@@ -57,40 +39,48 @@ type UserRequest = {
   mainBranchId: number;
 };
 
+type AdminRequest = {
+  _id?: string;
+  username: string;
+  email: string;
+  password: string;
+  roleId: string;
+  shopId: string;
+}
+
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // GET - Get all users for a specific client
-    getUsersByClientId: builder.query<User[], string>({
-      query: (clientId) => `/api/v1/users?clientId=${clientId}`,
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(
-                ({ userId }) => ({ type: "Users", id: userId } as const)
-              ),
-              { type: "Users", id: "USER_LIST" },
-            ]
-          : [{ type: "Users", id: "USER_LIST" }],
+    getAllUsers: builder.query<User[], void>({
+      query: () => "/api/users",
+      providesTags: [{ type: "Users", id: "USER_LIST" }],
     }),
-
     // POST - Create a new user
-    createUser: builder.mutation<User, UserRequest>({
+    createAdmin: builder.mutation<Admin, AdminRequest>({
       query: (data) => ({
-        url: "/api/v1/users",
+        url: "/api/admins",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "Users", id: "USER_LIST" }],
+      // invalidatesTags: [{ type: "Admin", id: "USER_LIST" }],
+    }),
+
+    updateAdmin: builder.mutation<Admin, AdminRequest>({
+      query: (data) => ({
+        url: `/api/admins/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Admin", id: "ADMIN_LIST" }],
     }),
 
     // PUT - Update user details
     updateUser: builder.mutation<User, Partial<User>>({
-      query: (data) => ({
-        url: "/api/v1/users",
+      query: ({ _id, ...data }) => ({
+        url: `/api/users/profile/${_id}`,
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: (_, __, { userId }) => [{ type: "Users", id: userId }],
+      invalidatesTags: (_, __, { _id }) => [{ type: "Users", id: _id }],
     }),
 
     // GET - Get current user (self) details
@@ -102,8 +92,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetUsersByClientIdQuery,
-  useCreateUserMutation,
+  useGetAllUsersQuery,
+  useCreateAdminMutation,
+  useUpdateAdminMutation,
   useUpdateUserMutation,
   useGetCurrentUserQuery,
 } = userApiSlice;

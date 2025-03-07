@@ -42,6 +42,7 @@ export const ShopModal = () => {
   const [error, setError] = useState<string>("");
   const [createShop] = useCreateShopMutation();
   const [updateShop] = useUpdateShopMutation();
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -108,6 +109,26 @@ export const ShopModal = () => {
     { id: 2, name: "Category 2" },
     { id: 3, name: "Category 3" },
   ];
+
+  const getCurrentLocation = () => {
+    setIsGettingLocation(true);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          form.setValue("latitude", position.coords.latitude);
+          form.setValue("longitude", position.coords.longitude);
+          setIsGettingLocation(false);
+        },
+        (error) => {
+          toast.error("Error getting location: " + error.message);
+          setIsGettingLocation(false);
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by your browser");
+      setIsGettingLocation(false);
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Don't require image upload when editing if no new image is selected
@@ -263,23 +284,35 @@ export const ShopModal = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="latitude"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Latitude:</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="latitude"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Latitude:</FormLabel>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={getCurrentLocation}
+                          disabled={isGettingLocation}
+                        >
+                          {isGettingLocation ? "Getting Location..." : "Get Current Location"}
+                        </Button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="longitude"

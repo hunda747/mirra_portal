@@ -11,41 +11,36 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { SuspendAlertModal } from "@/components/ui/modals/suspend-alert-modal";
 import { Button } from "@/components/ui/button";
-import { Shop } from "@/features/shops/shopApiSlice";
+import { Shop } from "@/features/shops/shopSlice";
 import { useShopModal } from "@/hooks/use-shop-modal";
-import { useUpdateShopStatusMutation } from "@/features/shops/shopApiSlice";
+import { User, useUpdateUserMutation } from "@/features/user/userApiSlice";
 
 interface CellActionProps {
-  data: Shop;
+  data: User;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const navigate = useNavigate();
-  const shopModal = useShopModal();
-  const [updateShopStatus] = useUpdateShopStatusMutation();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const isShopActive = data.isOpen;
+  const isShopActive = data.status;
   const actionLabel = isShopActive ? "Suspend" : "Activate";
   const confirmMessage = isShopActive
-    ? "Do you want to suspend this shop?"
-    : "Do you want to activate this shop?";
+    ? "Do you want to suspend this user?"
+    : "Do you want to activate this user?";
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success("Shop ID copied to the clipboard");
-  };
-
-  const onEdit = () => {
-    shopModal.onOpen(data);
+    toast.success("User ID copied to the clipboard");
   };
 
   const onToggleStatus = async () => {
     try {
       setLoading(true);
-      await updateShopStatus({ id: data._id.toString(), isOpen: !isShopActive }).unwrap();
-      toast.success(`Shop ${isShopActive ? "suspended" : "activated"}.`);
+      await updateUser({ _id: data._id, status: !isShopActive ? "active" : "inactive" }).unwrap();
+      toast.success(`User ${isShopActive ? "suspended" : "activated"}.`);
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong!");
@@ -76,14 +71,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem onClick={() => onCopy(data._id.toString())}>
             <Copy className="mr-2 h-4 w-4" />
             Copy ID
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={onEdit}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate(`/shops/${data._id}`)}>
-            <Backpack className="mr-2 h-4 w-4" />
-            Preview
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <StopCircle className="mr-2 h-4 w-4" />

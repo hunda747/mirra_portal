@@ -66,8 +66,14 @@ interface OrderDetailResponse {
 
 export const orderApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getOrders: builder.query<OrderResponse, void>({
-      query: () => "/api/orders",
+    getOrders: builder.query<OrderResponse, { startDate?: string; endDate?: string } | void>({
+      query: (params) => {
+        if (params) {
+          const { startDate, endDate } = params;
+          return `/api/orders?startDate=${startDate}&endDate=${endDate}`;
+        }
+        return "/api/orders";
+      },
       providesTags: ['Orders'],
     }),
     getOrder: builder.query<OrderDetailResponse, string>({

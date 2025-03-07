@@ -7,6 +7,7 @@ import exampleReducer from "./features/example/exampleSlice";
 import userReducer from "./features/user/userSlice";
 import authReducer from "./features/auth/authSlice";
 // import visitTargetReducer from "./features/visit-target/visitTargetSlice";
+
 export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -19,6 +20,7 @@ export const store = configureStore({
   // Adding the api middleware enables caching, invalidation, polling, etc.
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
+  devTools: true,
 });
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors

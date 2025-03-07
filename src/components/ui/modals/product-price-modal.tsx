@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { Modal } from "../modal";
 import {
@@ -23,51 +23,85 @@ import {
 } from "../select";
 import { useProductPriceModal } from "@/hooks/use-product-price-modal";
 import { useGetProductsQuery } from "@/features/product/productApiSlice";
-import { useAddProductToShopMutation } from "@/features/shops/shopApiSlice";
+import { useAddProductToShopMutation, useUpdateProductPriceMutation } from "@/features/shops/shopApiSlice";
+
 const formSchema = z.object({
   productId: z.string().min(1, "Shop name is required"),
   price: z.number().min(1, "Price is required"),
   inStock: z.boolean().optional(),
+  quantity: z.number().min(0, "Quantity must be a positive number").optional(),
 });
 
 export const ProductPriceModal = ({ shopId }: { shopId: string }) => {
   const productPriceModal = useProductPriceModal();
   const { data: products } = useGetProductsQuery();
   const [loading, setLoading] = useState(false);
-  const [addProductToShop] = useAddProductToShopMutation();
+  const [addProductToShop,] = useAddProductToShopMutation();
+  const [updateProductPrice] = useUpdateProductPriceMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      productId: "",
-      price: 0,
-      inStock: false,
+      productId: productPriceModal.data?.productId || "",
+      price: productPriceModal.data?.price || 0,
+      inStock: productPriceModal.data?.inStock || false,
+      quantity: productPriceModal.data?.quantity || 0,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Form values:", values);
+  useEffect(() => {
+    if (productPriceModal.data) {
+      form.reset({
+        productId: productPriceModal.data.productId || "",
+        price: productPriceModal.data.price || 0,
+        inStock: productPriceModal.data.inStock || false,
+        quantity: productPriceModal.data.quantity || 0,
+      });
+    }
+  }, [productPriceModal.data, form]);
 
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
-      const response = await addProductToShop({ shopId: shopId, productId: values.productId, price: values.price, inStock: values.inStock || false }).unwrap();
-      if (response) {
-        toast.success("Product Added");
+
+      if (productPriceModal.data?.isEditing) {
+        const response = await updateProductPrice({
+          shopId,
+          productId: values.productId,
+          price: values.price,
+          inStock: values.inStock || false,
+          quantity: values.quantity || 0
+        }).unwrap();
+
+        if (response) {
+          toast.success("Product price updated");
+        }
+      } else {
+        const response = await addProductToShop({
+          shopId,
+          productId: values.productId,
+          price: values.price,
+          inStock: values.inStock || false,
+          quantity: values.quantity || 0
+        }).unwrap();
+
+        if (response) {
+          toast.success("Product Added");
+        }
       }
+
       productPriceModal.onClose();
     } catch (error: any) {
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }
-
-    console.log("Form errors:", form.formState.errors);
   };
 
   return (
     <Modal
-      title="Add Product"
-      description="Add a new product to the shop"
+      title={productPriceModal.data?.isEditing ? "Edit Product Price" : "Add Product"}
+      description={productPriceModal.data?.isEditing ? "Update product price information" : "Add a new product to the shop"}
       isOpen={productPriceModal.isOpen}
       onClose={productPriceModal.onClose}
     >
@@ -82,7 +116,7 @@ export const ProductPriceModal = ({ shopId }: { shopId: string }) => {
                   <FormItem>
                     <FormLabel>Product:</FormLabel>
                     <Select
-                      disabled={loading}
+                      disabled={loading || productPriceModal.data?.isEditing}
                       onValueChange={field.onChange}
                       value={field.value?.toString() || ""}
                       defaultValue={field.value?.toString() || ""}
@@ -131,6 +165,26 @@ export const ProductPriceModal = ({ shopId }: { shopId: string }) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                name="quantity"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Quantity
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Quantity"
+                        {...field}
+                        type="number"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {/* <FormField
                 name="inStock"
                 control={form.control}
@@ -157,7 +211,7 @@ export const ProductPriceModal = ({ shopId }: { shopId: string }) => {
                   disabled={loading}
                   className="bg-green-700 hover:bg-green-800"
                 >
-                  Continue
+                  {productPriceModal.data?.isEditing ? "Update" : "Continue"}
                 </Button>
               </div>
             </form>

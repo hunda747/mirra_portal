@@ -9,14 +9,20 @@ import ProductWithPricePresentation from "./ProductWithPricePresentation";
 import { Button } from "@/components/ui/button";
 import { useProductPriceModal } from "@/hooks/use-product-price-modal";
 import { ProductPriceModal } from "@/components/ui/modals/product-price-modal";
+import AdminListPresentation from "./AdminListPresentation";
+import { AdminModal } from "@/components/ui/modals/add-admin-modal";
+import { useAdminModal } from "@/hooks/use-admin-modal";
 interface ShopDetailPresentationProps {
   shop: Shop;
 }
 
 const ShopDetailPresentation: FC<ShopDetailPresentationProps> = ({ shop }) => {
   const productPriceModal = useProductPriceModal();
+  const adminModal = useAdminModal();
   return <div>
     <ProductPriceModal shopId={shop._id} />
+    <AdminModal shopId={shop._id} />
+
     <Card className="w-full rounded-xl shadow-lg bg-white">
       <CardHeader className="flex flex-row items-center justify-between space-x-6 p-6 border-b">
         <div className="flex space-x-6 items-center">
@@ -87,8 +93,18 @@ const ShopDetailPresentation: FC<ShopDetailPresentationProps> = ({ shop }) => {
           </CardTitle>
           <Button variant="outline" onClick={() => productPriceModal.onOpen()}>Add Product</Button>
         </div>
-        <ProductWithPricePresentation products={shop?.products} />
+        <ProductWithPricePresentation products={shop?.products} shopId={shop._id} />
       </CardContent>
+      <CardContent className="border-t w-full">
+        <div className="flex items-center justify-between py-4">
+          <CardTitle className="text-lg font-semibold text-gray-800">
+            Admins
+          </CardTitle>
+          <Button variant="outline" onClick={() => adminModal.onOpen()}>Add admin</Button>
+        </div>
+        <AdminListPresentation admins={shop?.admins || []} />
+      </CardContent>
+
     </Card>
   </div>;
 };

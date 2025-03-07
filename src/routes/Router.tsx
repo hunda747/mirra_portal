@@ -15,6 +15,9 @@ import Products from "@/pages/admin/Products";
 import ShopDetail from "@/pages/admin/ShopDetail";
 import Orders from "@/pages/admin/Orders";
 import OrderDetail from "@/pages/admin/OrderDetail";
+import Users from "@/pages/admin/Users";
+import DeliveryFee from "@/pages/admin/DeliveryFee";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -42,6 +45,14 @@ const router = createBrowserRouter(
       {createProtectedRoute({
         path: "/orders/:id",
         element: <OrderDetail />,
+      })}
+      {createProtectedRoute({
+        path: "/users",
+        element: <Users />,
+      })}
+      {createProtectedRoute({
+        path: "/settings/delivery-fee",
+        element: <DeliveryFee />,
       })}
     </Route>
   )
